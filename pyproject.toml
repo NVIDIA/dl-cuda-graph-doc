@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: MIT
+
+[project]
+name = "dl-cuda-graph-doc"
+version = "0.1.0"
+description = "CUDA Graph Best Practice for PyTorch - Documentation"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE", "LICENSE-DOCS"]
+authors = [
+    { name = "NVIDIA Corporation" }
+]
+
+[dependency-groups]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-autobuild>=2024.0.0",
+    "sphinx-copybutton>=0.5.0",
+    "sphinx-design>=0.5.0",
+    "sphinxcontrib-mermaid>=0.9.0",
+    "myst-parser>=2.0.0",
+    "nvidia-sphinx-theme",
+]
+
+[tool.hatch.build.targets.wheel]
+# This is a documentation-only project, no Python packages to build
+packages = []
