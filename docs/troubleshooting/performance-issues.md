@@ -252,21 +252,21 @@ Note that `torch.compile` with `mode="reduce-overhead"` uses [compiled autograd]
 
 **Symptom**: Parallel kernels on multiple streams become serialized when using CUDA graphs, even though they run concurrently in eager mode.
 
-**Why it happens**: CUDA GPUs have a limited number of hardware channels (called "device connections") for concurrent stream execution—**32 by default** (128 on Blackwell, but still defaults to 32). When two streams are mapped to the same device channel, kernels on those streams serialize instead of running in parallel.
+**Why it happens**: CUDA GPUs have a limited number of hardware channels (called "device connections") for concurrent stream execution. When two streams are mapped to the same device channel, kernels on those streams serialize instead of running in parallel. The default `CUDA_DEVICE_MAX_CONNECTIONS` value is `8`.
 
 This issue is more pronounced with CUDA graphs because:
 
 1. **PyTorch stream pool**: PyTorch maintains a [pool of 32 streams per priority level](https://github.com/pytorch/pytorch/blob/v2.9.0/c10/cuda/CUDAStream.cpp#L20-L21). When you call `torch.cuda.Stream()`, you get a stream from this pool in round-robin fashion. If you request more than 32 streams, you start reusing the same underlying CUDA streams.
 
-2. **CUDA graph stream expansion**: When capturing a CUDA graph with multiple streams, the CUDA driver may create additional internal streams to fully exploit concurrency during replay. This can exceed the 32-channel limit even if your code uses fewer streams.
+2. **CUDA graph stream expansion**: When capturing a CUDA graph with multiple streams, the CUDA driver may create additional internal streams to fully exploit concurrency during replay. This can exceed the channel limit even if your code uses fewer streams.
 
 **How to diagnose**: Profile with `nsys profile --cuda-graph-trace=node` to see individual kernels within CUDA graphs. Compare eager mode vs graph mode—look for kernels that run concurrently in eager mode but become serialized in the CUDA graph replay.
 
 **How to fix**:
 
-1. **Limit stream count in user code**: Reduce the number of streams to stay well within the 32-channel limit.
+1. **Limit stream count in user code**: Reduce the number of streams to stay well within the channel limit.
 
-2. **Increase max connections (Blackwell+)**: On Blackwell and newer GPUs, set `CUDA_DEVICE_MAX_CONNECTIONS=128` to use all available hardware channels.
+2. **Increase max connections**: Set `CUDA_DEVICE_MAX_CONNECTIONS` to a larger value, such as `16` or `32`.
 
 ---
 
