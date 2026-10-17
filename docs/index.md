@@ -168,6 +168,7 @@ examples/stable-diffusion-v2
 examples/gpt-3-175b
 examples/llama2-70b-lora
 examples/llama-31-405b
+examples/deepseek-v3-paged-stash
 ```
 
 ```{toctree}

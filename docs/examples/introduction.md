@@ -54,6 +54,13 @@ Fine-tuning with LoRA adapters, FP8+FP4, and per-layer graphing.
 Full-iteration graphing at massive scale with FP4 and Megatron-LM for training and inference.
 :::
 
+:::{grid-item-card} DeepSeek-V3: Paged Stashing
+:link: deepseek-v3-paged-stash
+:link-type: doc
+
+Full forward/backward graphs for token-dropless MoEs with device-initiated grouped GEMM, compact activation storage, and overflow recovery.
+:::
+
 ::::
 
 ## Comparison Table
@@ -81,6 +88,8 @@ The following table compares CUDA Graph implementations across different models 
 
 - ✅ = Supported/Handled
 - ❌ = Not present/Not supported
+
+For a routed MoE example, see [DeepSeek-V3: Paged Stashing](deepseek-v3-paged-stash.md), based on NVIDIA's MLPerf Training v6.0 submission. It combines full forward/backward capture with GPU-managed activation pages and an eager dropless recovery path.
 
 ## General Patterns
 
@@ -112,6 +121,7 @@ Select an example that matches your use case from the cards above, or explore al
 | 🧠 **[GPT-3 175B](gpt-3-175b.md)** | Per-layer graphing with FP8, pipeline parallelism,  |
 | 🦙 **[Llama 2 70B LoRA](llama2-70b-lora.md)** | Fine-tuning, LoRA adapters |
 | 🦙 **[Llama 3.1 405B](llama-31-405b.md)** | Maximum scale, Megatron-LM |
+| **[DeepSeek-V3: Paged Stashing](deepseek-v3-paged-stash.md)** | Dropless MoE routing, full forward/backward graphs, activation memory |
 
 After Reviewing Examples
 

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="690" viewBox="0 0 1120 690" role="img" aria-labelledby="title desc">
+<title id="title">Paged stashing separates compute capacity from retained activations</title>
+<desc id="desc">Without stashing, activations A, B, and C each retain a capacity-sized allocation with unused space. With stashing, temporary compute buffers are reused, and valid activations occupy pages in a shared pool. Forward copies into pages; backward restores from them. GPU token counts and page records drive the copies.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#526579"/></marker></defs>
+<rect width="1120" height="690" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#172b40}.heading{font-size:23px;font-weight:700}.sub{font-size:16px;fill:#526579}.label{font-size:17px;font-weight:700}.small{font-size:15px}.white{fill:#fff;font-weight:700}</style>
+
+<text x="36" y="42" class="heading" text-anchor="start">Paged stashing: reuse compute buffers, retain valid activations</text>
+<text x="36" y="71" class="sub" text-anchor="start">Illustrative snapshot of three saved activations of the same type; not to scale.</text>
+<rect x="28" y="98" width="505" height="467" rx="12" fill="#f7f9fc" stroke="#d9e1ea"/>
+<rect x="551" y="98" width="541" height="467" rx="12" fill="#f7f9fc" stroke="#d9e1ea"/>
+<text x="50" y="135" class="heading" text-anchor="start">Without paged stashing</text>
+<text x="50" y="162" class="sub" text-anchor="start">Capacity-sized storage retained until backward</text>
+<text x="573" y="135" class="heading" text-anchor="start">With paged stashing</text>
+<text x="573" y="162" class="sub" text-anchor="start">Reusable compute storage + shared page pool</text>
+<text x="50" y="200" class="label" text-anchor="start">Saved activation A</text>
+<rect x="50" y="212" width="460" height="38" rx="4" fill="#e4e9f0" stroke="none"/>
+<rect x="50" y="212" width="138" height="38" rx="4" fill="#287c8e" stroke="none"/>
+<text x="65" y="237" class="white" text-anchor="start">A</text>
+<text x="200" y="237" class="small" text-anchor="start">Unused capacity</text>
+<text x="50" y="296" class="label" text-anchor="start">Saved activation B</text>
+<rect x="50" y="308" width="460" height="38" rx="4" fill="#e4e9f0" stroke="none"/>
+<rect x="50" y="308" width="230" height="38" rx="4" fill="#6050a3" stroke="none"/>
+<text x="65" y="333" class="white" text-anchor="start">B</text>
+<text x="292" y="333" class="small" text-anchor="start">Unused capacity</text>
+<text x="50" y="392" class="label" text-anchor="start">Saved activation C</text>
+<rect x="50" y="404" width="460" height="38" rx="4" fill="#e4e9f0" stroke="none"/>
+<rect x="50" y="404" width="92" height="38" rx="4" fill="#b46c25" stroke="none"/>
+<text x="65" y="429" class="white" text-anchor="start">C</text>
+<text x="154" y="429" class="small" text-anchor="start">Unused capacity</text>
+<text x="50" y="529" class="sub" text-anchor="start">Unused space stays live with each saved tensor.</text>
+<text x="573" y="198" class="label" text-anchor="start">Temporary compute buffers</text>
+<rect x="573" y="211" width="497" height="42" rx="4" fill="#e4e9f0" stroke="none"/>
+<rect x="573" y="211" width="150" height="42" rx="4" fill="#287c8e" stroke="none"/>
+<text x="588" y="238" class="white" text-anchor="start">Valid region</text>
+<text x="738" y="238" class="small" text-anchor="start">Capacity headroom</text>
+<text x="573" y="278" class="sub" text-anchor="start">Reuse after the stash copy completes.</text>
+<path d="M660 293 L660 350" fill="none" stroke="#526579" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="677" y="324" class="small" text-anchor="start">Forward: stash</text>
+<path d="M1001 350 L1001 293" fill="none" stroke="#526579" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="985" y="346" class="small" text-anchor="end">Backward: restore</text>
+<text x="573" y="384" class="label" text-anchor="start">Paged activation pool</text>
+<rect x="573" y="402" width="76" height="39" rx="4" fill="#287c8e" stroke="none"/>
+<text x="611" y="427" class="white" text-anchor="middle">A</text>
+<rect x="657" y="402" width="76" height="39" rx="4" fill="#287c8e" stroke="none"/>
+<text x="695" y="427" class="white" text-anchor="middle">A</text>
+<rect x="741" y="402" width="76" height="39" rx="4" fill="#287c8e" stroke="none"/>
+<text x="779" y="427" class="white" text-anchor="middle">A</text>
+<rect x="825" y="402" width="76" height="39" rx="4" fill="#6050a3" stroke="none"/>
+<text x="863" y="427" class="white" text-anchor="middle">B</text>
+<rect x="909" y="402" width="76" height="39" rx="4" fill="#6050a3" stroke="none"/>
+<text x="947" y="427" class="white" text-anchor="middle">B</text>
+<rect x="993" y="402" width="76" height="39" rx="4" fill="#6050a3" stroke="none"/>
+<text x="1031" y="427" class="white" text-anchor="middle">B</text>
+<rect x="573" y="450" width="76" height="39" rx="4" fill="#6050a3" stroke="none"/>
+<text x="611" y="475" class="white" text-anchor="middle">B</text>
+<rect x="657" y="450" width="76" height="39" rx="4" fill="#6050a3" stroke="none"/>
+<text x="695" y="475" class="white" text-anchor="middle">B</text>
+<rect x="741" y="450" width="76" height="39" rx="4" fill="#b46c25" stroke="none"/>
+<text x="779" y="475" class="white" text-anchor="middle">C</text>
+<rect x="825" y="450" width="76" height="39" rx="4" fill="#b46c25" stroke="none"/>
+<text x="863" y="475" class="white" text-anchor="middle">C</text>
+<rect x="909" y="450" width="76" height="39" rx="4" fill="#e4e9f0" stroke="none"/>
+<text x="947" y="475" class="small" text-anchor="middle">–</text>
+<rect x="993" y="450" width="76" height="39" rx="4" fill="#e4e9f0" stroke="none"/>
+<text x="1031" y="475" class="small" text-anchor="middle">–</text>
+<text x="573" y="511" class="sub" text-anchor="start">Pages hold valid activations; free pages are reusable.</text>
+<text x="573" y="540" class="sub" text-anchor="start">Page records locate each activation for backward.</text>
+<rect x="28" y="586" width="1064" height="78" rx="8" fill="#edf3f8" stroke="none"/>
+<text x="50" y="614" class="label" text-anchor="start">GPU metadata drives execution</text>
+<text x="50" y="641" class="sub" text-anchor="start">Token counts select valid rows; page records track storage. Allocations and captured launches stay fixed.</text>
+</svg>
