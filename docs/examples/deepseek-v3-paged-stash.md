@@ -3,7 +3,7 @@ SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All 
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# DeepSeek-V3: Paged Stashing for Dropless MoE
+# DeepSeek-V3 671B: Paged Stashing for Dropless MoE
 
 :::{note}
 
@@ -261,6 +261,8 @@ Monitor iteration time, peak allocated and reserved GPU memory, host memory use,
 
 **Continue learning**:
 
-- **[Handling Dynamic Patterns](../torch-cuda-graph/handling-dynamic-patterns.md)** - Static buffers and device-side dynamic behavior
+- **[Writing Sync-Free Code](../torch-cuda-graph/sync-free-code.md)** - Keep shape metadata and execution decisions on the GPU
+- **[Memory Issues](../troubleshooting/memory-issues.md)** - Diagnose graph memory pools, fragmentation, and buffer lifetimes
+- **[Partial Graphing for Dropless MoE](../torch-cuda-graph/handling-dynamic-patterns.md#example-2-moe-models-with-token-dropless)** - Graph surrounding static layers when the expert implementation requires host-side sizing
 - **[Transformer Engine and Megatron-LM CUDA Graphs](../torch-cuda-graph/te-megatron-cuda-graphs.md)** - Framework capture and replay infrastructure
 - **[Troubleshooting](../troubleshooting/introduction.md)** - Debug capture failures, memory issues, and numerical errors
