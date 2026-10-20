@@ -66,7 +66,7 @@ A complete checklist to verify your PyTorch code is ready for CUDA Graph capture
 - [ ] **Static shapes** ([details](handling-dynamic-patterns.md#dynamic-shapes))
 
     - [ ] Tensor shapes fixed across replays; use padding or bucketing ([details](../troubleshooting/numerical-errors.md#dynamic-shapes-fixed-tensor-dimensions))
-    - [ ] MoE with dynamic routing: graph only static parts ([details](handling-dynamic-patterns.md#example-2-moe-models-with-token-dropless))
+    - [ ] MoE with dynamic routing: use [partial graphing](handling-dynamic-patterns.md#example-2-moe-models-with-token-dropless) for implementations that require host-side sizing, or [full-iteration graphing](../examples/deepseek-v3-paged-stash.md) with static-capacity buffers, device-side shape metadata, and overflow recovery
 
 ## Self-Contained Stream Capture
 
