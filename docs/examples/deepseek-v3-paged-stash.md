@@ -227,6 +227,15 @@ Paged stashing retains only valid activations in the page pool and allows capaci
 
 Stash and restore copies share a dedicated CUDA side stream so they can overlap with expert computation. These copies consume memory bandwidth, while page records, pool headroom, and temporary buffers contribute to the memory footprint. Buffer sizing and scheduling control the balance between memory savings, copy overlap, and overflow recovery.
 
+### DeepSeek-V3 on 256 GB300 GPUs
+
+For DeepSeek-V3 671B training on 256 NVIDIA GB300 GPUs, full CUDA graph execution with paged stashing delivers a **1.68× training speedup** over execution without CUDA graphs. GPU memory usage decreases from **221 GB to 209 GB**, a reduction of **12 GB (5.4%)**.
+
+| Configuration | Training speedup | GPU memory (GB) |
+|---------------|------------------|-----------------|
+| No CUDA graph | 1.00× (baseline) | 221 |
+| Full CUDA graph + paged stashing | 1.68× | 209 |
+
 ### Performance Monitoring
 
 Monitor iteration time, peak allocated and reserved GPU memory, host memory use, and spill and overflow-retry frequency. A CUDA trace shows graph coverage, copy/compute overlap, and recapture after recovery. Measure steady-state replay after initialization and capture, and include retries, remaining eager warmup steps, and recapture in end-to-end throughput. These metrics guide receive-budget and stash-pool sizing for the training schedule.

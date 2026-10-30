@@ -446,6 +446,8 @@ At revision [`6e7e6ed`](https://github.com/NVIDIA/Megatron-LM/tree/6e7e6ed435e41
 
 This replaces the older `--enable-cuda-graph --cuda-graph-scope full_iteration` pair. Omit `--cuda-graph-modules` for full-iteration capture.
 
+For dropless MoE training, `PagedStashRunner` wraps `FullCudaGraphWrapper` to manage paged activation storage and eager retries on overflow. See [DeepSeek-V3 671B: Paged Stashing for Dropless MoE](../examples/deepseek-v3-paged-stash.md) for the configuration and execution flow.
+
 With `--transformer-impl transformer_engine`, the [CLI automatically enables the TE RNG tracker](https://github.com/NVIDIA/Megatron-LM/blob/6e7e6ed435e41af04fc41e7007ef862049153fdc/megatron/training/arguments.py#L1971-L1977) for CUDA graphs. An explicit `--te-rng-tracker` flag is optional in that configuration.
 
 Loss and gradient checks can remain enabled. The [graph wrapper](https://github.com/NVIDIA/Megatron-LM/blob/6e7e6ed435e41af04fc41e7007ef862049153fdc/megatron/core/full_cuda_graph.py#L232-L256) captures validation values and runs deferred host-side checks after replay, before the training loop decides whether to rerun or update the optimizer. The older requirement to pass `--no-check-for-nan-in-loss-and-grad` does not apply to this revision. See the [versioned CUDA graph guide](https://github.com/NVIDIA/Megatron-LM/blob/6e7e6ed435e41af04fc41e7007ef862049153fdc/docs/user-guide/features/cuda_graph.md) for the newer interface.
