@@ -408,6 +408,8 @@ While `CudaGraphManager` graphs individual layers, [`FullCudaGraphWrapper`](http
 
 ### How to Use It
 
+The commands, requirements, and implementation walkthrough below describe Megatron-LM `core_v0.14.0`. For the newer CLI, see the version note after the requirements.
+
 **For Megatron-LM pretrain scripts** (e.g., `pretrain_gpt.py`):
 
 Enable via command-line flags:
@@ -418,7 +420,7 @@ python pretrain_gpt.py \
     --cuda-graph-scope full_iteration \
     --cuda-graph-warmup-steps 1 \
     --te-rng-tracker \
-    --no-check-for-nan-in-loss-and-grad  # Required
+    --no-check-for-nan-in-loss-and-grad  # Required in core_v0.14.0
 ```
 
 Megatron's [training script](https://github.com/NVIDIA/Megatron-LM/blob/core_v0.14.0/megatron/training/training.py#L1990) automatically wraps `forward_backward_func` with `FullCudaGraphWrapper` when `--cuda-graph-scope full_iteration` is set.
@@ -427,11 +429,29 @@ Megatron's [training script](https://github.com/NVIDIA/Megatron-LM/blob/core_v0.
 
 If writing a custom training script based on Megatron-LM (similar to [`pretrain_gpt.py`](https://github.com/NVIDIA/Megatron-LM/blob/core_v0.14.0/pretrain_gpt.py), [`pretrain_bert.py`](https://github.com/NVIDIA/Megatron-LM/blob/core_v0.14.0/pretrain_bert.py), etc.), use the same command-line flags. The automatic wrapping in [`megatron/training/training.py`](https://github.com/NVIDIA/Megatron-LM/blob/core_v0.14.0/megatron/training/training.py#L1990) handles it automatically—no manual wrapping code needed.
 
-**Requirements**:
+**Requirements for `core_v0.14.0`**:
 
 - **Megatron-LM infrastructure**: Must use `megatron.training` framework with Megatron Core model components (GPTModel, TransformerBlock, etc.)—this is where automatic wrapping happens
 - **TE RNG tracker** (`--te-rng-tracker`): Required because standard RNG uses CPU scalars that can't be captured; TE RNG uses device tensors compatible with graphs
-- **Disable NaN checking** (`--no-check-for-nan-in-loss-and-grad`): **Mandatory** for full_iteration scope. NaN checking requires CPU-GPU synchronization (`.item()` calls) which is forbidden during graph capture
+- **Disable NaN checking** (`--no-check-for-nan-in-loss-and-grad`): **Mandatory in `core_v0.14.0`** for full_iteration scope. NaN checking requires CPU-GPU synchronization (`.item()` calls) which is forbidden during graph capture
+
+:::{note} Newer Megatron-LM CLI
+
+At revision [`6e7e6ed`](https://github.com/NVIDIA/Megatron-LM/tree/6e7e6ed435e41af04fc41e7007ef862049153fdc), enable full-iteration graphing with:
+
+```bash
+--cuda-graph-impl full_iteration \
+--cuda-graph-warmup-steps 1
+```
+
+This replaces the older `--enable-cuda-graph --cuda-graph-scope full_iteration` pair. Omit `--cuda-graph-modules` for full-iteration capture.
+
+For dropless MoE training, `PagedStashRunner` wraps `FullCudaGraphWrapper` to manage paged activation storage and eager retries on overflow. See [DeepSeek-V3 671B: Paged Stashing for Dropless MoE](../examples/deepseek-v3-paged-stash.md) for the configuration and execution flow.
+
+With `--transformer-impl transformer_engine`, the [CLI automatically enables the TE RNG tracker](https://github.com/NVIDIA/Megatron-LM/blob/6e7e6ed435e41af04fc41e7007ef862049153fdc/megatron/training/arguments.py#L1971-L1977) for CUDA graphs. An explicit `--te-rng-tracker` flag is optional in that configuration.
+
+Loss and gradient checks can remain enabled. The [graph wrapper](https://github.com/NVIDIA/Megatron-LM/blob/6e7e6ed435e41af04fc41e7007ef862049153fdc/megatron/core/full_cuda_graph.py#L232-L256) captures validation values and runs deferred host-side checks after replay, before the training loop decides whether to rerun or update the optimizer. The older requirement to pass `--no-check-for-nan-in-loss-and-grad` does not apply to this revision. See the [versioned CUDA graph guide](https://github.com/NVIDIA/Megatron-LM/blob/6e7e6ed435e41af04fc41e7007ef862049153fdc/docs/user-guide/features/cuda_graph.md) for the newer interface.
+:::
 
 ### How It Works
 
@@ -584,5 +604,5 @@ Now that we've examined all three approaches, let's compare them side-by-side.
 
 - **[Best Practices for PyTorch](best-practices.md)**: General PyTorch CUDA Graph best practices
 - **[PyTorch Integration](torch-integration.md)**: Understanding the underlying PyTorch CUDA Graph APIs
-- **[Examples](../examples/introduction.md)**: See CUDA Graphs in action with RNN-T, Stable Diffusion, and Llama 3.1 405B
+- **[Examples](../examples/introduction.md)**: See CUDA Graphs in action with RNN-T, Stable Diffusion, Llama 3.1 405B, and DeepSeek-V3 671B
 - **[Megatron Core Documentation](https://docs.nvidia.com/megatron-core/developer-guide/latest/index.html)**: Official Megatron Core developer guide

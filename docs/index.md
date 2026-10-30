@@ -15,7 +15,7 @@ CUDA Graphs are a powerful feature that can significantly improve the performanc
 
 - 📚 **CUDA Graph Basics**: Get familiar with CUDA Graphs fundamentals—what they are, how they work, and their benefits—without needing deep CUDA expertise
 - 🐍 **PyTorch CUDA Graphs**: Learn PyTorch's integration, Megatron-LM implementations, and systematic best practices for adopting graphs
-- 💡 **Examples**: Real-world implementations from MLPerf Training benchmarks—Llama 3.1 405B, GPT-3 175B, Stable Diffusion v2, RNN-T, and more
+- 💡 **Examples**: Real-world implementations from MLPerf Training benchmarks—Llama 3.1 405B, GPT-3 175B, Stable Diffusion v2, RNN-T, and DeepSeek-V3 671B for dropless MoE
 - 🔧 **Troubleshooting**: Debug capture failures, silent numerical errors, memory issues, and performance problems with comprehensive guides
 - 📖 **Reference**: Links to official documentation, tools, and additional learning resources
 
@@ -168,6 +168,7 @@ examples/stable-diffusion-v2
 examples/gpt-3-175b
 examples/llama2-70b-lora
 examples/llama-31-405b
+examples/deepseek-v3-paged-stash
 ```
 
 ```{toctree}

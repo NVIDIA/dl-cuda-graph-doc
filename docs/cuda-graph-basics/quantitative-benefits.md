@@ -168,4 +168,4 @@ The improvements are most dramatic when your workload is **CPU-limited** (low GP
 Now that you know how to quantify the benefits:
 
 - **[PyTorch CUDA Graph Integration](../torch-cuda-graph/torch-integration.md)**: Learn how PyTorch integrates with CUDA Graphs and how to use them in your applications
-- **[Examples](../examples/introduction.md)**: See real-world performance improvements in RNN-T, Stable Diffusion, and Llama 3.1 405B
+- **[Examples](../examples/introduction.md)**: Explore graphing approaches and performance tradeoffs in RNN-T, Stable Diffusion, Llama 3.1 405B, and DeepSeek-V3 671B

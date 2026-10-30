@@ -282,6 +282,6 @@ All aspects of your computation must be determined before capture and remain fix
 **Other sections**:
 
 - **[CUDA Graph Basics](../cuda-graph-basics/introduction.md)**: Fundamentals of how CUDA Graphs work
-- **[Examples](../examples/introduction.md)**: Real-world implementations in RNN-T, Stable Diffusion, and Llama 3.1 405B
+- **[Examples](../examples/introduction.md)**: Real-world implementations in RNN-T, Stable Diffusion, Llama 3.1 405B, and DeepSeek-V3 671B
 - **[Troubleshooting](../troubleshooting/debugging-strategies.md)**: Debug capture failures, silent errors, and performance issues
 - **[Reference](../reference.md)**: Additional resources and documentation links

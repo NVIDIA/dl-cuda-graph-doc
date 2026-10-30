@@ -10,7 +10,7 @@ View the documentation at: **https://docs.nvidia.com/dl-cuda-graph/**
 
 - **CUDA Graph Basics**: Fundamentals, constraints, and quantitative benefits
 - **PyTorch CUDA Graphs**: Integration, Transformer Engine & Megatron-LM, best practices, and handling dynamic patterns
-- **Examples**: Real-world implementations from MLPerf Training (Llama 3.1 405B, GPT-3 175B, Stable Diffusion v2, RNN-T)
+- **Examples**: Real-world implementations from MLPerf Training (Llama 3.1 405B, GPT-3 175B, Stable Diffusion v2, RNN-T, and DeepSeek-V3 671B for dropless MoE)
 - **Troubleshooting**: Capture failures, numerical errors, memory issues, and performance debugging
 
 ## 🚀 Quick Start

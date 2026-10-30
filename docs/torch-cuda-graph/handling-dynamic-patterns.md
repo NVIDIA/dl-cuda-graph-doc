@@ -796,12 +796,12 @@ There are two main approaches to handle dynamic shapes:
 
 Start with padding (simplest), then move to bucketing only if profiling shows significant wasted computation.
 
-**When shapes are too dynamic**: If shapes vary unpredictably with no pattern (e.g., MoE token routing, variable image sizes, irregular scientific data), neither padding nor bucketing works well. In these cases:
+**When padding and bucketing are inefficient**: If shapes vary unpredictably (e.g., token routing with conventional MoE kernels, variable image sizes, irregular scientific data), padding may waste substantial work and bucketing may require too many graphs. For implementations that require host-side sizing:
 
 - Graph only the static parts (see Example 2 below), or
 - Keep the model in eager mode entirely
 
-CUDA graphs are not a one-size-fits-all solution—sometimes eager mode is the right answer.
+MoE kernels that consume device-side shape metadata can also support full-iteration graphing; see the alternative in [Example 2](#example-2-moe-models-with-token-dropless).
 
 ### Example 1: Variable Sequence Lengths (NLP)
 
@@ -961,9 +961,9 @@ class MoELayer(nn.Module):
 - No predictable pattern—can't use bucketing effectively
 - Even with capacity limits, shapes vary significantly
 
-**Solution - Graph only static parts**:
+**Partial graphing approach - Graph only static parts**:
 
-Since the expert routing is inherently dynamic, graph the non-MoE layers and keep MoE layers in eager mode:
+The implementation above creates variable-sized expert inputs and uses Python control flow to select expert computation. Keep that expert region in eager mode and graph the surrounding static layers:
 
 ```python
 class MoEModel(nn.Module):
@@ -974,7 +974,7 @@ class MoEModel(nn.Module):
 
     def forward(self, x):
         x = self.pre_layers(x)   # Can be graphed
-        x = self.moe_layer(x)    # Must stay in eager mode
+        x = self.moe_layer(x)    # This implementation runs eagerly
         x = self.post_layers(x)  # Can be graphed
         return x
 
@@ -1007,19 +1007,23 @@ for batch in dataloader:
 **Performance considerations**:
 
 - Even with partial graphing, you can still achieve significant speedup if the non-MoE layers dominate compute time
-- For MoE-heavy models (many MoE layers), CUDA graphs may provide limited benefit
+- For MoE-heavy models (many MoE layers), partial graphing may provide limited benefit because expert computation remains eager
 
-**Alternative solutions for fully graphing MoE**:
+**Alternative - Full-iteration graphing for dropless MoE**:
+
+With sync-free dispatch and device-initiated grouped GEMM, dynamic token counts remain on the GPU while computation uses preallocated buffers. Paged stashing reduces the activation memory retained for backward, and overflow recovery preserves dropless training when routing exceeds the configured capacity. See [DeepSeek-V3 671B: Paged Stashing for Dropless MoE](../examples/deepseek-v3-paged-stash.md) for the full-iteration approach.
+
+**Other alternatives that change routing behavior**:
 
 - **Token dropping**: Set a fixed expert capacity (e.g., max 128 tokens per expert). If routing assigns more tokens, drop the excess. This makes shapes static and fully graphable, but may degrade model quality if too many tokens are dropped
 - **Static expert assignment**: Assign tokens to experts in a round-robin or predetermined pattern instead of learned routing. This makes shapes predictable and graphable, but sacrifices the adaptive routing that makes MoE effective
 
-**Key lesson**: Don't force CUDA graphs where they don't fit. MoE models with dynamic routing are a prime example where partial graphing (static layers only) is the pragmatic solution. The dynamic parts stay in eager mode where PyTorch handles variable shapes naturally.
+**Key lesson**: Use partial graphing when the expert implementation requires variable-sized allocations or host-side decisions, as in the example above. Full-iteration graphing supports dynamic routing when compatible dispatch and expert kernels consume device-side shape metadata with preallocated buffers.
 
 ## What's Next?
 
 - **[Quick Checklist](quick-checklist.md)**: Complete checklist to verify your code is ready for capture
-- **[Examples](../examples/introduction.md)**: Real-world implementations in RNN-T, Stable Diffusion, and Llama 3.1 405B
+- **[Examples](../examples/introduction.md)**: Real-world implementations in RNN-T, Stable Diffusion, Llama 3.1 405B, and DeepSeek-V3 671B
 - **[Troubleshooting](../troubleshooting/introduction.md)**: Comprehensive guide for debugging capture failures, silent failures, memory errors, and performance issues
 - **[Constraints](../cuda-graph-basics/constraints.md)**: Full list of CUDA Graph restrictions
 - **[PyTorch-Specific Constraints](torch-integration.md#pytorch-specific-constraints)**: PyTorch requirements
