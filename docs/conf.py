@@ -9,9 +9,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "CUDA Graph Best Practice for PyTorch"
-copyright = "2025, NVIDIA Corporation"
+project = "CUDA Graph Best Practices for PyTorch"
+copyright = "2026, NVIDIA Corporation"
 author = "NVIDIA Corporation"
+version = "latest"  # Fills <meta name="docsearch:version">
 release = "latest"
 
 # -- General configuration ---------------------------------------------------
@@ -64,13 +65,16 @@ html_theme_options = {
         "json_url": "../versions.json",
         "version_match": release,
     },
+    # OneTrust consent banner and Adobe Analytics, required for public NVIDIA docs
+    "public_docs_features": True,
 }
 
 # Static files (images, etc.)
 html_static_path = ["assets"]
 
-# Extra files to copy to the build output (for version switcher)
-html_extra_path = ["project.json", "versions.json"]
+# Extra files to copy to the build output; versions.json is published one level up
+# (see scripts/build-release.sh)
+html_extra_path = ["project.json"]
 
 # -- Linkcheck configuration -------------------------------------------------
 linkcheck_ignore = []

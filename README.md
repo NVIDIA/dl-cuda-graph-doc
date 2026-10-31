@@ -1,4 +1,4 @@
-# CUDA Graph Best Practice For PyTorch
+# CUDA Graph Best Practices for PyTorch
 
 A comprehensive guide to using CUDA Graphs effectively with PyTorch, covering CUDA fundamentals, PyTorch integration, Megatron-LM implementations, and practical troubleshooting.
 

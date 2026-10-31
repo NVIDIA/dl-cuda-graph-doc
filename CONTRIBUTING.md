@@ -148,10 +148,15 @@ Content
 
 2. **Update `docs/conf.py`**:
    ```python
+   version = "v1.0"
    release = "v1.0"
    ```
 
-3. **Build and deploy** to a versioned directory
+3. **Build and deploy**: `./scripts/build-release.sh` stages the upload tree in
+   `docs/_build/release/dl-cuda-graph/` and packs it into
+   `docs/_build/release/dl-cuda-graph.tar.gz`. Upload `versions.json` to
+   `/dl-cuda-graph/versions.json` and `latest/` to `/dl-cuda-graph/latest/`
+   (or the versioned directory). Doctrees and `.buildinfo` are already excluded.
 
 ## Community
 

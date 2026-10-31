@@ -3,11 +3,11 @@ SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All 
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# CUDA Graph Best Practice for PyTorch
+# Overview
 
 Welcome to the comprehensive guide on using CUDA Graphs effectively with PyTorch!
 
-## Overview
+## About This Guide
 
 CUDA Graphs are a powerful feature that can significantly improve the performance of your PyTorch models by reducing CPU overhead and enabling more efficient GPU utilization. This guide provides best practices, examples, and tips for integrating CUDA Graphs into your deep learning workflows with PyTorch.
 
