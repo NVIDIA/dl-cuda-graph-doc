@@ -1,6 +1,10 @@
 [
     {
         "preferred": true,
+        "version": "1.0",
+        "url": "../1.0"
+    },
+    {
         "version": "latest",
         "url": "../latest"
     }

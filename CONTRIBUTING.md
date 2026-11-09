@@ -138,25 +138,24 @@ Content
 
 ### Releasing a New Version
 
-1. **Update `docs/versions.json`**:
+1. **Add the version to `docs/versions.json`** as `preferred`, and drop
+   `preferred` from the previous release:
    ```json
    [
-       {"preferred": true, "version": "v1.0", "url": "../v1.0"},
+       {"preferred": true, "version": "1.1", "url": "../1.1"},
+       {"version": "1.0", "url": "../1.0"},
        {"version": "latest", "url": "../latest"}
    ]
    ```
 
-2. **Update `docs/conf.py`**:
-   ```python
-   version = "v1.0"
-   release = "v1.0"
-   ```
+2. **Build**: `./scripts/build-release.sh 1.1` builds both `1.1/` and `latest/`
+   from the current source, stages them in `docs/_build/release/dl-cuda-graph/`, and
+   packs `docs/_build/release/dl-cuda-graph.tar.gz`. Doctrees and `.buildinfo` are
+   excluded.
 
-3. **Build and deploy**: `./scripts/build-release.sh` stages the upload tree in
-   `docs/_build/release/dl-cuda-graph/` and packs it into
-   `docs/_build/release/dl-cuda-graph.tar.gz`. Upload `versions.json` to
-   `/dl-cuda-graph/versions.json` and `latest/` to `/dl-cuda-graph/latest/`
-   (or the versioned directory). Doctrees and `.buildinfo` are already excluded.
+3. **Deploy**: upload `versions.json` to `/dl-cuda-graph/versions.json`, and the
+   `1.1/` and `latest/` directories to `/dl-cuda-graph/1.1/` and
+   `/dl-cuda-graph/latest/`. Leave older version directories in place.
 
 ## Community
 
