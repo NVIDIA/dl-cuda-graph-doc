@@ -6,13 +6,17 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import os
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "CUDA Graph Best Practice for PyTorch"
-copyright = "2025, NVIDIA Corporation"
+project = "CUDA Graph Best Practices for PyTorch"
+copyright = "2026, NVIDIA Corporation"
 author = "NVIDIA Corporation"
-release = "latest"
+# Docs version: "latest" or a pinned release such as "1.0" (see scripts/build-release.sh).
+# Must match a "version" in versions.json; also fills <meta name="docsearch:version">.
+version = release = os.environ.get("DOCS_VERSION", "latest")
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -64,13 +68,12 @@ html_theme_options = {
         "json_url": "../versions.json",
         "version_match": release,
     },
+    # OneTrust consent banner and Adobe Analytics, required for public NVIDIA docs
+    "public_docs_features": True,
 }
 
 # Static files (images, etc.)
 html_static_path = ["assets"]
-
-# Extra files to copy to the build output (for version switcher)
-html_extra_path = ["project.json", "versions.json"]
 
 # -- Linkcheck configuration -------------------------------------------------
 linkcheck_ignore = []
